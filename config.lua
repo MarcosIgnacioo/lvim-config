@@ -52,6 +52,8 @@ vim.cmd([[au FocusLost * :wa]])
 -- Example mapping: Remap leader + w to save the current file
 vim.api.nvim_set_keymap('n', '<leader>w', ':w<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>z', ':ZenMode<CR>', { noremap = true, silent = true })
+
+vim.api.nvim_set_keymap('n', '<leader>fw', ':Telescope live_grep<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('i', 'kj', '<Esc>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('v', 'kj', '<Esc>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<Leader>a', '<C-^>', { noremap = true, silent = true })
@@ -65,42 +67,57 @@ vim.api.nvim_set_keymap('n', '<F5>', '"4p', { noremap = true, silent = true })
 
 vim.opt.relativenumber = true
 lvim.plugins = {
-  "lunarvim/horizon.nvim",
-  "nyngwang/nvimgelion",
-  {
-    'folke/zen-mode.nvim',
-    event = 'VeryLazy',
+{
+    "kawre/neotab.nvim",
+    event = "InsertEnter",
     opts = {
-      window = {
-        backdrop = 0.96, -- shade the backdrop of the Zen window. Set to 1 to keep the same as Normal
-        width = 80, -- width of the Zen window
-        height = 1, -- height of the Zen window
-        options = {
-          signcolumn = "no", -- disable signcolumn
-          cursorcolumn = false, -- disable cursor column
+        -- configuration goes here
+    },
+},
+"sainnhe/gruvbox-material",
+{ "ellisonleao/gruvbox.nvim", priority = 1000 , config = true, opts = ...},
+    "lunarvim/horizon.nvim",
+    "nyngwang/nvimgelion",
+    {
+        'folke/zen-mode.nvim',
+        event = 'VeryLazy',
+        opts = {
+            window = {
+                backdrop = 0.96, -- shade the backdrop of the Zen window. Set to 1 to keep the same as Normal
+                width = 80, -- width of the Zen window
+                height = 1, -- height of the Zen window
+                options = {
+                    signcolumn = "no", -- disable signcolumn
+                    cursorcolumn = false, -- disable cursor column
+                }
+            },
+            plugins = {
+                options = {
+                    enabled = true,
+                    ruler = true, -- disables the ruler text in the cmd line area
+                    showcmd = false, -- disables the command in the last line of the screen
+                    laststatus = 0, -- turn off the statusline in zen mode
+                }}
         }
-      },
-      plugins = {
-        options = {
-          enabled = true,
-          ruler = true, -- disables the ruler text in the cmd line area
-          showcmd = false, -- disables the command in the last line of the screen
-          laststatus = 0, -- turn off the statusline in zen mode
-        }}
-    }
-  },
-
-  {
-    'barrett-ruth/live-server.nvim',
-    build = 'yarn global add live-server',
-    config = true
-  },
-  {
-    'ThePrimeagen/harpoon',
-    event = 'VeryLazy',
-    config = function ()
-      local mark = require("harpoon.mark")
-      local ui = require("harpoon.ui")
+    },
+    {
+        "ggandor/leap.nvim",
+        event = 'VeryLazy',
+        config = function ()
+            require('leap').add_default_mappings()
+        end
+    },
+    {
+        'barrett-ruth/live-server.nvim',
+        build = 'yarn global add live-server',
+        config = true
+    },
+    {
+        'ThePrimeagen/harpoon',
+        event = 'VeryLazy',
+        config = function ()
+            local mark = require("harpoon.mark")
+            local ui = require("harpoon.ui")
 
       vim.keymap.set("n", "<leader>t",mark.add_file)
       vim.keymap.set("n", "<leader>m",ui.toggle_quick_menu)
@@ -112,15 +129,17 @@ lvim.plugins = {
     end
   },
 }
-lvim.colorscheme = 'nvimgelion'
 -- Establecer el fondo a gris oscuro
 
 -- Change the background of lualine_c section for normal mode
 
-vim.defer_fn(function()
-    -- Cambiar el color de fondo después de cargar el esquema de colores
-    vim.cmd([[hi Normal guibg=#121212 ctermbg=235]])
-end, 0)
+-- vim.defer_fn(function()
+--     -- Cambiar el color de fondo después de cargar el esquema de colores
+--     vim.cmd([[hi Normal guibg=#121212 ctermbg=235]])
+-- end, 0)
+
+lvim.colorscheme = 'gruvbox-material'
+
 lvim.lsp.on_attach_callback = function(client, _)
   client.server_capabilities.semanticTokensProvider = nil
 end
@@ -136,8 +155,32 @@ parser_config.blade = {
 }
 
 local capabilities = require("lvim.lsp").common_capabilities()
+
 require("lvim.lsp.manager").setup("htmx", {
   on_attach = require("lvim.lsp").common_on_attach,
   on_init = require("lvim.lsp").common_on_init,
   capabilities = capabilities,
 })
+
+require("lvim.lsp.manager").setup("html", {
+  on_attach = require("lvim.lsp").common_on_attach,
+  on_init = require("lvim.lsp").common_on_init,
+  capabilities = capabilities,
+})
+
+require("lvim.lsp.manager").setup("html", {
+  on_attach = require("lvim.lsp").common_on_attach,
+  on_init = require("lvim.lsp").common_on_init,
+  capabilities = capabilities,
+})
+
+
+
+vim.cmd("autocmd BufNewFile,BufRead *.tmpl setfiletype html")
+vim.cmd("autocmd BufNewFile,BufRead *.blade.php setfiletype html")
+
+function Err_nil()
+    vim.api.nvim_put({"if err != nil {}"}, "c", true, true)
+end
+-- Asigna la función a una combinación de teclas (puedes cambiarlo según tus preferencias)
+vim.api.nvim_set_keymap('n', '<Leader>hm', [[:lua Err_nil()<CR>]], { noremap = true, silent = true })
