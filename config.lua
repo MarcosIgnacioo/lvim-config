@@ -8,6 +8,8 @@
 -- set autoindent
 vim.g.mapleader = ' '
 
+
+
 -- CONFIGURACION EPICA GAMER
 
 -- Activar el ajuste de líneas
@@ -45,20 +47,21 @@ vim.cmd([[au! BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe
 
 -- Guardar automáticamente los archivos antes de cambiar de ventana
 vim.cmd([[au FocusLost * :wa]])
-
 -- Configurar otros ajustes según tus preferencias
-
-
 -- Example mapping: Remap leader + w to save the current file
+--
+vim.api.nvim_set_keymap('n', '-', '_', { noremap = true })
+vim.api.nvim_set_keymap('n', '4', '$', { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>w', ':w<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>z', ':ZenMode<CR>', { noremap = true, silent = true })
-
-vim.api.nvim_set_keymap('n', '<leader>fw', ':Telescope live_grep<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>n', ':Telescope live_grep<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('i', '<A-,>', [[fmt.Println()<Esc>ha]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('i', '<A-b>', [[if err != nil {<CR>}<Esc>k]], { noremap = true, silent = true })
 vim.api.nvim_set_keymap('i', 'kj', '<Esc>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('v', 'kj', '<Esc>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<Leader>a', '<C-^>', { noremap = true, silent = true })
-
 -- Mapeo para pegar desde el registro "0 con la tecla F1 en modo normal
+--
 vim.api.nvim_set_keymap('n', '<F1>', '"0p', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<F2>', '"1p', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<F3>', '"2p', { noremap = true, silent = true })
@@ -67,15 +70,15 @@ vim.api.nvim_set_keymap('n', '<F5>', '"4p', { noremap = true, silent = true })
 
 vim.opt.relativenumber = true
 lvim.plugins = {
-{
-    "kawre/neotab.nvim",
-    event = "InsertEnter",
-    opts = {
-        -- configuration goes here
+    {
+        "kawre/neotab.nvim",
+        event = "InsertEnter",
+        opts = {
+            -- configuration goes here
+        },
     },
-},
-"sainnhe/gruvbox-material",
-{ "ellisonleao/gruvbox.nvim", priority = 1000 , config = true, opts = ...},
+    "sainnhe/gruvbox-material",
+    { "ellisonleao/gruvbox.nvim", priority = 1000, config = true, opts = ... },
     "lunarvim/horizon.nvim",
     "nyngwang/nvimgelion",
     {
@@ -83,27 +86,28 @@ lvim.plugins = {
         event = 'VeryLazy',
         opts = {
             window = {
-                backdrop = 0.96, -- shade the backdrop of the Zen window. Set to 1 to keep the same as Normal
-                width = 80, -- width of the Zen window
-                height = 1, -- height of the Zen window
+                backdrop = 0.96,          -- shade the backdrop of the Zen window. Set to 1 to keep the same as Normal
+                width = 80,               -- width of the Zen window
+                height = 1,               -- height of the Zen window
                 options = {
-                    signcolumn = "no", -- disable signcolumn
+                    signcolumn = "no",    -- disable signcolumn
                     cursorcolumn = false, -- disable cursor column
                 }
             },
             plugins = {
                 options = {
                     enabled = true,
-                    ruler = true, -- disables the ruler text in the cmd line area
+                    ruler = true,    -- disables the ruler text in the cmd line area
                     showcmd = false, -- disables the command in the last line of the screen
-                    laststatus = 0, -- turn off the statusline in zen mode
-                }}
+                    laststatus = 0,  -- turn off the statusline in zen mode
+                }
+            }
         }
     },
     {
         "ggandor/leap.nvim",
         event = 'VeryLazy',
-        config = function ()
+        config = function()
             require('leap').add_default_mappings()
         end
     },
@@ -115,19 +119,19 @@ lvim.plugins = {
     {
         'ThePrimeagen/harpoon',
         event = 'VeryLazy',
-        config = function ()
+        config = function()
             local mark = require("harpoon.mark")
             local ui = require("harpoon.ui")
 
-      vim.keymap.set("n", "<leader>t",mark.add_file)
-      vim.keymap.set("n", "<leader>m",ui.toggle_quick_menu)
+            vim.keymap.set("n", "<leader>t", mark.add_file)
+            vim.keymap.set("n", "<leader>m", ui.toggle_quick_menu)
 
-      vim.keymap.set("n", "<leader>1", function() ui.nav_file(1) end)
-      vim.keymap.set("n", "<leader>2", function() ui.nav_file(2) end)
-      vim.keymap.set("n", "<leader>3", function() ui.nav_file(3) end)
-      vim.keymap.set("n", "<leader>4", function() ui.nav_file(4) end)
-    end
-  },
+            vim.keymap.set("n", "<leader>1", function() ui.nav_file(1) end)
+            vim.keymap.set("n", "<leader>2", function() ui.nav_file(2) end)
+            vim.keymap.set("n", "<leader>3", function() ui.nav_file(3) end)
+            vim.keymap.set("n", "<leader>4", function() ui.nav_file(4) end)
+        end
+    },
 }
 -- Establecer el fondo a gris oscuro
 
@@ -141,37 +145,44 @@ lvim.plugins = {
 lvim.colorscheme = 'gruvbox-material'
 
 lvim.lsp.on_attach_callback = function(client, _)
-  client.server_capabilities.semanticTokensProvider = nil
+    client.server_capabilities.semanticTokensProvider = nil
 end
 
 local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
 parser_config.blade = {
-  install_info = {
-    url = "https://github.com/EmranMR/tree-sitter-blade",
-    files = {"src/parser.c"},
-    branch = "main",
-  },
-  filetype = "blade"
+    install_info = {
+        url = "https://github.com/EmranMR/tree-sitter-blade",
+        files = { "src/parser.c" },
+        branch = "main",
+    },
+    filetype = "blade"
 }
 
 local capabilities = require("lvim.lsp").common_capabilities()
 
 require("lvim.lsp.manager").setup("htmx", {
-  on_attach = require("lvim.lsp").common_on_attach,
-  on_init = require("lvim.lsp").common_on_init,
-  capabilities = capabilities,
+    on_attach = require("lvim.lsp").common_on_attach,
+    on_init = require("lvim.lsp").common_on_init,
+    capabilities = capabilities,
+})
+
+require("lvim.lsp.manager").setup("sqlls", {
+    on_attach = require("lvim.lsp").common_on_attach,
+    on_init = require("lvim.lsp").common_on_init,
+    capabilities = capabilities,
+})
+
+
+require("lvim.lsp.manager").setup("html", {
+    on_attach = require("lvim.lsp").common_on_attach,
+    on_init = require("lvim.lsp").common_on_init,
+    capabilities = capabilities,
 })
 
 require("lvim.lsp.manager").setup("html", {
-  on_attach = require("lvim.lsp").common_on_attach,
-  on_init = require("lvim.lsp").common_on_init,
-  capabilities = capabilities,
-})
-
-require("lvim.lsp.manager").setup("html", {
-  on_attach = require("lvim.lsp").common_on_attach,
-  on_init = require("lvim.lsp").common_on_init,
-  capabilities = capabilities,
+    on_attach = require("lvim.lsp").common_on_attach,
+    on_init = require("lvim.lsp").common_on_init,
+    capabilities = capabilities,
 })
 
 
@@ -180,7 +191,9 @@ vim.cmd("autocmd BufNewFile,BufRead *.tmpl setfiletype html")
 vim.cmd("autocmd BufNewFile,BufRead *.blade.php setfiletype html")
 
 function Err_nil()
-    vim.api.nvim_put({"if err != nil {}"}, "c", true, true)
+    vim.api.nvim_put({ "if err != nil {}" }, "c", true, true)
 end
+
 -- Asigna la función a una combinación de teclas (puedes cambiarlo según tus preferencias)
 vim.api.nvim_set_keymap('n', '<Leader>hm', [[:lua Err_nil()<CR>]], { noremap = true, silent = true })
+lvim.format_on_save.enabled = true
