@@ -50,8 +50,21 @@ vim.cmd([[au FocusLost * :wa]])
 -- Configurar otros ajustes según tus preferencias
 -- Example mapping: Remap leader + w to save the current file
 --
+--
+-- (asdfasdf)
 vim.api.nvim_set_keymap('n', '-', '_', { noremap = true })
 vim.api.nvim_set_keymap('n', '4', '$', { noremap = true })
+vim.api.nvim_set_keymap('n', '<A-9>', 'vi(', { noremap = true })
+vim.api.nvim_set_keymap('n', '<A-{>', 'vi{', { noremap = true })
+vim.api.nvim_set_keymap('n', '<A-[>', 'vi[', { noremap = true })
+
+vim.api.nvim_set_keymap('n', '<C-9>', 'ci(', { noremap = true })
+vim.api.nvim_set_keymap('n', '<C-{>', 'vi{', { noremap = true })
+vim.api.nvim_set_keymap('n', '<C-[>', 'vi[', { noremap = true })
+vim.api.nvim_set_keymap('n', '<leader>ee', 'oif err != nil {<CR>}<Esc>O<Tab>return err<Esc>',
+    { noremap = true, silent = true })
+
+
 vim.api.nvim_set_keymap('n', '<leader>w', ':w<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>z', ':ZenMode<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>n', ':Telescope live_grep<CR>', { noremap = true, silent = true })
@@ -78,6 +91,10 @@ lvim.plugins = {
         },
     },
     "sainnhe/gruvbox-material",
+    {
+        "wellle/context.vim",
+        event = 'VeryLazy',
+    },
     { "ellisonleao/gruvbox.nvim", priority = 1000, config = true, opts = ... },
     "lunarvim/horizon.nvim",
     "nyngwang/nvimgelion",
